@@ -1,0 +1,92 @@
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+
+import matplotlib.pyplot as plt
+
+import pandas as pd
+
+import numpy as np
+
+
+
+data = {
+
+    'Recency': [10, 50, 5, 100, 20, 80],
+
+    'Freq': [20, 5, 30, 2, 15, 4],
+
+    'Spent': [500, 100, 800, 50, 400, 80],
+
+    'VIP': [1, 0, 1, 0, 1, 0]
+
+}
+
+
+
+df = pd.DataFrame(data)
+
+
+
+X = df.drop('VIP', axis=1)
+
+y = df['VIP']
+
+
+
+clf = DecisionTreeClassifier(
+
+    criterion='entropy',
+
+    max_depth=3
+
+)
+clf.fit(X, y)
+
+
+
+plt.figure(figsize=(10, 6))
+
+
+
+plot_tree(
+
+    clf,
+
+    feature_names=X.columns,
+
+    class_names=["Non-VIP", "VIP"],
+
+    filled=True,
+
+    rounded=True,
+
+    fontsize=15
+
+)
+
+
+
+plt.title("Customer Segmentation Tree")
+
+plt.tight_layout()
+
+plt.show()
+
+
+
+print(
+
+    "Feature Importances:",
+
+    dict(zip(X.columns, clf.feature_importances_))
+
+)
+
+/**************************************************************************************/
+
+OUTPUT
+Feature Importances: {'Recency': np.float64(0.0), 'Freq': np.float64(1.0), 'Spent': np.float64(0.0)}
+
+
+
+/***********************************************************************************/
+

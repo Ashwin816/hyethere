@@ -1,0 +1,132 @@
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.tree import DecisionTreeClassifier
+
+from sklearn.ensemble import BaggingClassifier, AdaBoostClassifier
+
+from sklearn.metrics import accuracy_score, precision_score
+
+from sklearn.metrics import recall_score, f1_score
+
+
+
+data = pd.read_csv("Titanic.csv")
+
+
+
+features = ['Pclass', 'Sex', 'Age', 'Fare']
+
+
+
+data = data[features + ['Survived']]
+
+
+
+data['Age'] = data['Age'].fillna(data['Age'].median())
+
+
+
+data['Sex'] = data['Sex'].map({'male': 0, 'female': 1})
+
+
+
+X = data.drop('Survived', axis=1)
+
+y = data['Survived']
+
+
+
+X_train, X_test, y_train, y_test = train_test_split(
+
+  X, y,
+    test_size=0.2,
+
+    random_state=42
+
+)
+
+
+
+bagging = BaggingClassifier(
+
+    estimator=DecisionTreeClassifier(),
+
+    n_estimators=100,
+
+    random_state=42
+
+)
+
+
+
+bagging.fit(X_train, y_train)
+
+
+
+y_pred_bag = bagging.predict(X_test)
+
+
+
+print("Bagging Results")
+
+print("                    ")
+
+print("Accuracy :", accuracy_score(y_test, y_pred_bag))
+
+print("Precision:", precision_score(y_test, y_pred_bag))
+
+print("Recall :", recall_score(y_test, y_pred_bag))
+
+print("F1 Score :", f1_score(y_test, y_pred_bag))
+
+
+
+boosting = AdaBoostClassifier(
+
+    n_estimators=100,
+
+    random_state=42
+
+)
+
+
+
+boosting.fit(X_train, y_train)
+
+
+
+y_pred_boost = boosting.predict(X_test)
+print("\nAdaBoost Results")
+
+print("                 ")
+
+print("Accuracy :", accuracy_score(y_test, y_pred_boost))
+
+print("Precision:", precision_score(y_test, y_pred_boost))
+
+print("Recall :", recall_score(y_test, y_pred_boost))
+
+print("F1 Score :", f1_score(y_test, y_pred_boost))v
+
+/**************************************************************************************/
+
+OUTPUT
+Bagging Results
+
+Accuracy : 0.7932960893854749
+Precision: 0.7605633802816901
+Recall : 0.7297297297297297
+F1 Score : 0.7448275862068966
+
+
+AdaBoost Results
+
+Accuracy : 0.8044692737430168
+Precision: 0.7910447761194029
+Recall : 0.7162162162162162
+F1 Score : 0.75177304964539
+
+/***********************************************************************************/
+

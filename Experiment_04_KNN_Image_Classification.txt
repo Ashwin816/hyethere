@@ -1,0 +1,56 @@
+from sklearn.neighbors import KNeighborsClassifier
+
+from tensorflow.keras.datasets import fashion_mnist
+
+from sklearn.metrics import accuracy_score
+
+
+
+
+(X_train, y_train), (X_test, y_test) = fashion_mnist.load_data()
+
+
+
+X_train = X_train[:5000].reshape(5000, -1) / 255.0
+
+X_test = X_test[:1000].reshape(1000, -1) / 255.0
+
+
+
+y_train = y_train[:5000]
+
+y_test = y_test[:1000]
+
+
+
+
+for k in [3, 7, 15]:
+
+  knn = KNeighborsClassifier(n_neighbors=k)
+
+
+
+  knn.fit(X_train, y_train)
+
+
+
+  pred = knn.predict(X_test)
+
+
+
+  print(
+     f"K={k} Accuracy: "
+
+     f"{accuracy_score(y_test, pred):.2f}"
+
+ )
+
+/**************************************************************************************/
+
+OUTPUT
+K=3 Accuracy: 0.81
+K=7 Accuracy: 0.82
+K=15 Accuracy: 0.82
+
+/***********************************************************************************/
+
